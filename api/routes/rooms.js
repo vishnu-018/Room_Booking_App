@@ -1,17 +1,22 @@
 import express from "express";
 import {
-    createRoom,
-    deleteRoom,
-    getRoom,
-    getRooms,
-    updateRoom,
-  } from "../controllers/room.js";
-  import { verifyAdmin } from "../utils/verifyToken.js";
-const router=express.Router();
+  createRoom,
+  deleteRoom,
+  getRoom,
+  getRooms,
+  undoRoomAvailability,
+  updateRoom,
+  updateRoomAvailability,
+} from "../controllers/room.js";
+import { verifyAdmin } from "../utils/verifyToken.js";
+
+const router = express.Router();
 //CREATE
 router.post("/:hotelid", verifyAdmin, createRoom);
+
 //UPDATE
-router.put("/:id", updateRoom);
+router.put("/availability/:id", updateRoomAvailability);
+router.put("/:id", verifyAdmin, updateRoom);
 //DELETE
 router.delete("/:id/:hotelid", verifyAdmin, deleteRoom);
 //GET
@@ -20,5 +25,6 @@ router.get("/:id", getRoom);
 //GET ALL
 
 router.get("/", getRooms);
+router.put("/undo/availability/:id", undoRoomAvailability);
 
-export default router
+export default router;
