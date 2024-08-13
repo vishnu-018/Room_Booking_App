@@ -33,14 +33,18 @@ export const updateRoom = async (req, res, next) => {
     next(err);
   }
 };
+
 export const updateRoomAvailability = async (req, res, next) => {
   try {
+    const { id } = req.params;
+    const { dates } = req.body; // Dates should be an array of unavailable dates
+
     await Room.updateOne(
-      { "roomNumbers._id": req.params.id },
+      { "roomNumbers._id": id },
       {
         $push: {
-          "roomNumbers.$.unavailableDates": req.body.dates
-        },
+          "roomNumbers.$.unavailableDates": { $each: dates }
+        }
       }
     );
     res.status(200).json("Room status has been updated.");
@@ -48,6 +52,8 @@ export const updateRoomAvailability = async (req, res, next) => {
     next(err);
   }
 };
+
+
 export const deleteRoom = async (req, res, next) => {
   const hotelId = req.params.hotelid;
   try {
@@ -76,6 +82,41 @@ export const getRooms = async (req, res, next) => {
   try {
     const rooms = await Room.find();
     res.status(200).json(rooms);
+  } catch (err) {
+    next(err);
+  }
+};
+
+
+export const undoRoomAvailability = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const { dates } = req.body;
+
+    const room = await Room.findOne({ "roomNumbers._id": id });
+
+    const roomNumber = room.roomNumbers.find(
+      (roomNumber) => roomNumber._id.toString() === id
+    );
+
+    const isRoomAvailable = dates.every(
+      (date) => !roomNumber.unavailableDates.includes(new Date(date).getTime())
+    );
+
+    if (!isRoomAvailable) {
+      return res.status(400).json({ message: "Room is not available for selected dates." });
+    }
+
+    await Room.updateOne(
+      { "roomNumbers._id": id },
+      {
+        $push: {
+          "roomNumbers.$.unavailableDates": { $each: dates },
+        },
+      }
+    );
+
+    res.status(200).json("Room status has been updated.");
   } catch (err) {
     next(err);
   }
