@@ -26,7 +26,7 @@ const Reserve = ({ setOpen, hotelId, totalPrice }) => {
 
     return dates;
   };
-
+  
   const alldates = getDatesInRange(dates[0].startDate, dates[0].endDate);
 
   const isAvailable = (roomNumber) => {
@@ -37,7 +37,7 @@ const Reserve = ({ setOpen, hotelId, totalPrice }) => {
     return !isFound;
   };
 
-  const handleSelect = (e) => {
+  const handleSelect = (e) => { 
     const checked = e.target.checked;
     const value = e.target.value;
     setSelectedRooms(
@@ -46,6 +46,7 @@ const Reserve = ({ setOpen, hotelId, totalPrice }) => {
         : selectedRooms.filter((item) => item !== value)
     );
   };
+  console.log(selectedRooms);
 
   const navigate = useNavigate();
 
@@ -53,11 +54,11 @@ const Reserve = ({ setOpen, hotelId, totalPrice }) => {
     try {
       await Promise.all(
         selectedRooms.map((roomId) => {
-          const res = axios.put(`/rooms/availability/${roomId}`, {
+          const res = axios.put(`http://localhost:8800/api/hotels/rooms/availability/${roomId}`, {
             dates: alldates,
           });
           return res.data;
-        })
+        }) 
       );
       setOpen(false);
       navigate("/");
