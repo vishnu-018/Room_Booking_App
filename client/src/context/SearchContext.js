@@ -1,5 +1,6 @@
 import { createContext, useReducer } from "react";
 
+
 const INITIAL_STATE = {
   city: "", // Default to empty string
   dates: [], // Default to empty array
