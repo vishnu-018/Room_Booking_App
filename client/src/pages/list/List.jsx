@@ -138,6 +138,7 @@ const List = () => {
                 ))}
               </>
             )}
+            
             {error && <div>{error.message}</div>}
           </div>
         </div>
