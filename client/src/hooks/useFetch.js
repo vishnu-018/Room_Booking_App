@@ -6,6 +6,7 @@ const useFetch = (url) => {
   const [loading, setLoading] = useState(true); // Initialize as true for the initial load
   const [error, setError] = useState(null); // Initialize as null for better error handling
 
+  
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
