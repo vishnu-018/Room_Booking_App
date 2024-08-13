@@ -17,6 +17,7 @@ import { SearchContext } from "../../context/SearchContext";
 import { AuthContext } from "../../context/AuthContext";
 import Reserve from "../../components/reserve/Reserve";
 
+
 const Hotel = () => {
   const location = useLocation();
   const id = location.pathname.split("/")[2];
